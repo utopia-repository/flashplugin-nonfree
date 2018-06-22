@@ -181,51 +181,11 @@ get_upstream_version() {
 	arch_wget=i686
 	[ `dpkg --print-architecture` != "amd64" ] || arch_wget=x86_64
 
-	upstream=""
-
-	if [ -f $cachedir/get-upstream-version.pl ]
-	then
-		if [ "`stat --format=%y $cachedir/get-upstream-version.pl`" \< "2016-08-04 09:35" ]
-		then
-			[ "$verbose" != "yes" ] || echo "deleting old $cachedir/get-upstream-version.pl"
-			rm $cachedir/get-upstream-version.pl
-		fi
-	fi
-
-	if [ -f $cachedir/get-upstream-version.pl ]
-	then
-		cp $cachedir/get-upstream-version.pl .
-		upstream=`perl get-upstream-version.pl $arch_wget 2> /dev/null` || true
-
-		if [ "$upstream" = "" ]
-		then
-			rm -f get-upstream-version.pl
-			rm -f $cachedir/get-upstream-version.pl
-		fi
-	fi
-
-	if [ "$upstream" = "" ]
-	then
-		wgetoptions="$wgetquiet $wgetalways"
-		downloadurl=http://people.debian.org/~bartm/flashplugin-nonfree/D5C0FC14/get-upstream-version.pl.gz.pgp
-
-		HOME=/root \
-		wget $wgetoptions $downloadurl \
-			|| die_hard_with_a_cleanup "wget failed to download $downloadurl"
-
-		gpg -q --homedir "." --verify get-upstream-version.pl.gz.pgp 2> /dev/null \
-			|| die_hard_with_a_cleanup "gpg rejected signature of get-upstream-version.pl.gz.pgp"
-		gpg -q --homedir "." < get-upstream-version.pl.gz.pgp > get-upstream-version.pl.gz 2> /dev/null \
-			|| die_hard_with_a_cleanup "gpg rejected signature of get-upstream-version.pl.gz.pgp"
-
-		gunzip get-upstream-version.pl.gz \
-			|| die_hard_with_a_cleanup "failed to gunzip get-upstream-version.pl.gz"
-
-		upstream=`perl get-upstream-version.pl $arch_wget` \
-			|| die_hard_with_a_cleanup "failed to get upstream version"
-
-		cp get-upstream-version.pl $cachedir
-	fi
+	url="https://get.adobe.com/flashplayer/" 
+	upstream=`wget --no-check-certificate \
+		--tries=1 --timeout=15 \
+		--user-agent="Mozilla/5.0 (X11; U; Linux $arch_wget; en-us)" \
+		-nv -qO - $url | perl -n -e'/<strong>Version\s+(\d+\.\d+\.\d+\.\d+)<\/strong>/ && print $1'`
 }
 
 remove_extrafiles() {
@@ -287,30 +247,11 @@ case "$ACTION" in
 			[ "$fast" != "yes" ] || wgetoptions="$wgetoptions $wgetfast"
 			[ "$verbose" != "yes" ] || echo "wgetoptions=$wgetoptions"
 
-			downloadfile=fp.$upstream.sha512.i386.pgp.asc
-			[ `dpkg --print-architecture` != "amd64" ] || downloadfile=fp.$upstream.sha512.amd64.pgp.asc
-			downloadurl=http://people.debian.org/~bartm/flashplugin-nonfree/D5C0FC14/$downloadfile
-
-			[ "$verbose" != "yes" ] || echo "downloading $downloadurl ..."
-			HOME=/root \
-			wget $wgetoptions $downloadurl \
-				|| die_hard_with_a_cleanup "wget failed to download $downloadurl"
-
-			[ "$verbose" != "yes" ] || echo "verifying PGP $downloadfile ..."
-			gpg -q --homedir "." --verify $downloadfile 2> /dev/null \
-				|| die_hard_with_a_cleanup "gpg rejected signature of $downloadurl"
-			gpg -q --homedir "." < $downloadfile > checksums.txt 2> /dev/null \
-				|| die_hard_with_a_cleanup "gpg rejected signature of $downloadurl"
-
-			downloadfile=`head -n 1 < checksums.txt | cut -c 131-`
-
-			[ "$verbose" != "yes" ] || [ ! -f $cachedir/$downloadfile ] || echo "copying $cachedir/$downloadfile ..."
-			[ ! -f $cachedir/$downloadfile ] || cp -p $cachedir/$downloadfile .
-			[ "$verbose" != "yes" ] || [ ! -f $downloadfile ] || echo "verifying checksum $downloadfile ..."
-			[ ! -f $downloadfile ] || grep $downloadfile checksums.txt | sha512sum -c - > /dev/null 2>&1 || rm -f $downloadfile
-
-			downloaddir=`tail -n 1 < checksums.txt`
-			downloadurl=$downloaddir/$downloadfile
+			# original script use i686 for arch != amd64 adobe use i386
+			[ "$arch_wget" != "i686" ] || arch_wget=i386
+			downloaddir=$upstream
+			downloadfile=flash_player_npapi_linux.$arch_wget.tar.gz
+			downloadurl=https://fpdownload.adobe.com/get/flashplayer/pdc/$downloaddir/$downloadfile
 
 			wgetoptions="$wgetalways $wgetprogress"
 			[ "$quiet" != "yes" ] || wgetoptions="$wgetquiet $wgetalways"
@@ -323,21 +264,14 @@ case "$ACTION" in
 			HOME=/root \
 			wget $wgetoptions $downloadurl \
 				|| die_hard_with_a_cleanup "wget failed to download $downloadurl"
-			[ "$verbose" != "yes" ] || echo "verifying checksum $downloadfile ..."
-			grep tar.gz checksums.txt | sha512sum -c - > /dev/null 2>&1 \
-				|| die_hard_with_a_cleanup "sha512sum rejected $downloadfile"
 			[ "$verbose" != "yes" ] || echo "unpacking $downloadfile ..."
 			tar xozf $downloadfile
-			[ "$verbose" != "yes" ] || echo "verifying checksum contents of $downloadfile ..."
-			head -n 2 < checksums.txt | sha512sum -c - > /dev/null 2>&1 \
-				|| die_hard_with_a_cleanup "sha512sum rejected a part of $downloadfile"
 
 			targetdir=/usr/lib/flashplugin-nonfree
-			libflashplayerdotso=`grep "  .*libflashplayer\.so$" checksums.txt | cut -c 131-`
 
-			[ "$verbose" != "yes" ] || echo "moving $libflashplayerdotso to $targetdir ..."
+			[ "$verbose" != "yes" ] || echo "moving $UNPACKDIR/libflashplayer.so to $targetdir ..."
 			rm -f $targetdir/flashplayer.xpt
-			mv -f $libflashplayerdotso $targetdir
+			mv -f $UNPACKDIR/libflashplayer.so $targetdir
 
 			[ "$verbose" != "yes" ] || echo "setting permissions and ownership of $targetdir/libflashplayer.so ..."
 			chown root:root $targetdir/libflashplayer.so
@@ -449,4 +383,3 @@ esac
 do_cleanup
 
 [ "$verbose" != "yes" ] || echo "end of update-flashplugin-nonfree"
-
