@@ -167,10 +167,6 @@ wgetfast='-t 3 -T 15 '
 wgetalways=' -nd -P . '
 wgetprogress=' -v --progress=dot:default '
 
-[ "$verbose" != "yes" ] || echo "importing public key ..."
-gpg -q --homedir "." --import /usr/lib/flashplugin-nonfree/pubkey.asc > /dev/null 2>&1 \
-	|| die_hard_with_a_cleanup "gpg failed to import /usr/lib/flashplugin-nonfree/pubkey.asc"
-
 get_installed_version() {
 
 	installed=`strings /usr/lib/flashplugin-nonfree/libflashplayer.so 2> /dev/null | grep LNX | cut -d ' ' -f 2 | sed -e "s/,/./g"`
@@ -181,7 +177,7 @@ get_upstream_version() {
 	arch_wget=i686
 	[ `dpkg --print-architecture` != "amd64" ] || arch_wget=x86_64
 
-	url="https://get.adobe.com/flashplayer/" 
+	url="https://get.adobe.com/flashplayer/"
 	upstream=`wget --no-check-certificate \
 		--tries=1 --timeout=15 \
 		--user-agent="Mozilla/5.0 (X11; U; Linux $arch_wget; en-us)" \

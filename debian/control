@@ -8,7 +8,7 @@ Homepage: http://wiki.debian.org/FlashPlayer
 
 Package: flashplugin-nonfree
 Architecture: i386 amd64
-Depends: debconf | debconf-2.0, wget, gnupg | gnupg2, libatk1.0-0, libcairo2, libfontconfig1, libfreetype6, libgcc1, libglib2.0-0, libgtk2.0-0 (>= 2.14), libnspr4, libnss3, libpango1.0-0, libstdc++6, libx11-6, libxext6, libxt6, libcurl3-gnutls, binutils, ${misc:Depends}, ${shlibs:Depends}
+Depends: debconf | debconf-2.0, wget, libatk1.0-0, libcairo2, libfontconfig1, libfreetype6, libgcc1, libglib2.0-0, libgtk2.0-0 (>= 2.14), libnspr4, libnss3, libpango1.0-0, libstdc++6, libx11-6, libxext6, libxt6, libcurl3-gnutls, binutils, ${misc:Depends}, ${shlibs:Depends}
 Recommends: libwebkit2gtk-4.0-37-gtk2
 Pre-Depends: ca-certificates
 Suggests: iceweasel, firefox-esr, konqueror-nsplugins, ttf-mscorefonts-installer, fonts-dejavu, ttf-xfree86-nonfree, flashplugin-nonfree-extrasound [i386], hal-flash
