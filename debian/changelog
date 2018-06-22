@@ -1,4 +1,4 @@
-flashplugin-nonfree (1:3.7+nmu1) UNRELEASED; urgency=medium
+flashplugin-nonfree (1:3.7+nmu1) unstable; urgency=medium
 
   * Non-maintainer upload.
   * Remove broken references to https://people.debian.org/~bartm/; patch from
@@ -12,7 +12,7 @@ flashplugin-nonfree (1:3.7+nmu1) UNRELEASED; urgency=medium
   * Remove remaining calls to gpg and the dependency on gnupg.
     (Closes: #885119)
 
- -- James Lu <james@overdrivenetworks.com>  Fri, 22 Jun 2018 15:24:08 -0700
+ -- James Lu <james@overdrivenetworks.com>  Fri, 22 Jun 2018 16:27:56 -0700
 
 flashplugin-nonfree (1:3.7) unstable; urgency=medium
 
