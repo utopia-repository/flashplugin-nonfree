@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+%:
+	dh $@
+
+publish-checksums:
+	for a in i386 amd64 ; do gpg --default-key D5C0FC14 --armor --clearsign < fp10.sha512.$$a.txt > fp10.sha512.$$a.pgp.asc ; done
+	scp fp10.sha512.*.pgp.asc bartm@people.debian.org:/home/bartm/public_html/flashplugin-nonfree/D5C0FC14
+	rm -f fp10.sha512.*.pgp.asc
+	for v in 11.2.202.406 ; do \
+		for a in i386 amd64 ; do \
+			[ ! -e fp.$$v.sha512.$$a.txt ] || \
+			gpg --default-key D5C0FC14 --armor --clearsign < fp.$$v.sha512.$$a.txt > fp.$$v.sha512.$$a.pgp.asc ; \
+		done ; \
+	done
+	scp fp.*.sha512.*.pgp.asc bartm@people.debian.org:/home/bartm/public_html/flashplugin-nonfree/D5C0FC14
+	rm -f fp.*.sha512.*.pgp.asc
+
+publish-version-script:
+	gzip -c get-upstream-version.pl | gpg --default-key D5C0FC14 --sign > get-upstream-version.pl.gz.pgp
+	scp get-upstream-version.pl.gz.pgp bartm@people.debian.org:/home/bartm/public_html/flashplugin-nonfree/D5C0FC14
+	rm -f get-upstream-version.pl.gz.pgp
+
