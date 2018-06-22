@@ -3,8 +3,9 @@ flashplugin-nonfree (1:3.7+nmu1) UNRELEASED; urgency=medium
   * Non-maintainer upload.
   * Remove broken references to https://people.debian.org/~bartm/; patch from
     Gianluigi Tiesi (Closes: #851066, #889804, #884262)
-    - This removes checksum verification and PGP validation of
-      get-upstream-version.pl, which were previously provided by that site.
+    - This removes checksum verification of the Flash tarballs and PGP
+      validation of get-upstream-version.pl, which were previously provided by
+      that site.
     - It also rewrites the upstream version parsing to fetch from Adobe
       directly.
   * Add Recommends: libwebkit2gtk-4.0-37-gtk2. (Closes: #862144)
