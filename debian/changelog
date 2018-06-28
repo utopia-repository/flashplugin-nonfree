@@ -8,6 +8,8 @@ flashplugin-nonfree (1:3.7+nmu1) unstable; urgency=medium
       that site.
     - It also rewrites the upstream version parsing to fetch from Adobe
       directly.
+    - Remaining changes to this patch: don't use --no-check-certificate
+      with wget
   * Add Recommends: libwebkit2gtk-4.0-37-gtk2. (Closes: #862144)
   * Remove remaining calls to gpg and the dependency on gnupg.
     (Closes: #885119)

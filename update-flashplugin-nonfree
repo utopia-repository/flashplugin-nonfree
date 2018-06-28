@@ -178,8 +178,7 @@ get_upstream_version() {
 	[ `dpkg --print-architecture` != "amd64" ] || arch_wget=x86_64
 
 	url="https://get.adobe.com/flashplayer/"
-	upstream=`wget --no-check-certificate \
-		--tries=1 --timeout=15 \
+	upstream=`wget --tries=1 --timeout=15 \
 		--user-agent="Mozilla/5.0 (X11; U; Linux $arch_wget; en-us)" \
 		-nv -qO - $url | perl -n -e'/<strong>Version\s+(\d+\.\d+\.\d+\.\d+)<\/strong>/ && print $1'`
 }
