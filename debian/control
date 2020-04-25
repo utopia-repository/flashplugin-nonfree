@@ -1,7 +1,8 @@
 Source: flashplugin-nonfree
 Section: contrib/web
 Priority: optional
-Maintainer: Bart Martens <bartm@debian.org>
+Maintainer: James Lu (Utopia Repository) <james@overdrivenetworks.com>
+XSBC-Original-Maintainer: Bart Martens <bartm@debian.org>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.8
 Homepage: http://wiki.debian.org/FlashPlayer
