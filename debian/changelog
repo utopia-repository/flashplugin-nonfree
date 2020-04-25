@@ -1,10 +1,10 @@
-flashplugin-nonfree (1:3.7+nmu1~utopia2) UNRELEASED; urgency=medium
+flashplugin-nonfree (1:3.7+utopia2) unstable; urgency=medium
 
   * Utopia Repository upload.
   * Update libpango dependencies:
     - libpango1.0-0 -> libpango-1.0-0, libpangocairo-1.0-0, libpangoft2-1.0-0
 
- -- James Lu <james@overdrivenetworks.com>  Fri, 24 Apr 2020 17:41:08 -0700
+ -- James Lu <james@overdrivenetworks.com>  Fri, 24 Apr 2020 17:45:55 -0700
 
 flashplugin-nonfree (1:3.7+nmu1~utopia1) unstable; urgency=medium
 
