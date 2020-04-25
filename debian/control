@@ -6,6 +6,8 @@ XSBC-Original-Maintainer: Bart Martens <bartm@debian.org>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.8
 Homepage: http://wiki.debian.org/FlashPlayer
+Vcs-Git: https://github.com/utopia-repository/flashplugin-nonfree
+Vcs-Browser: https://github.com/utopia-repository/flashplugin-nonfree
 
 Package: flashplugin-nonfree
 Architecture: i386 amd64
